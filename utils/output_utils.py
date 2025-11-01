@@ -5,4 +5,4 @@ def export_to_csv(df):
 
 def export_to_excel(df):
     df.to_excel('output_file.xlsx')
-    print('Results exported as out_file.xlsx file in the directory.')
+    print('Results exported as output_file.xlsx file in the directory.')

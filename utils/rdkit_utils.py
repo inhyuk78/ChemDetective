@@ -1,9 +1,7 @@
 from rdkit import Chem
 from rdkit.Chem import Draw
-# from rdkit.Chem.Draw import IPythonConsole
 from rdkit.Chem import Descriptors
-from rdkit import DataStructs
-from PIL import Image
+import os
 
 functional_group_smiles_dict = {
     # Hydrocarbons
@@ -55,18 +53,22 @@ def convert_to_mol_from_smiles(smiles):
     mol = Chem.MolFromSmiles(smiles)
     return mol
 
-def visualize_mol(mol):
+def visualize_mol(mol, filename='molecule.png'):
     '''
     Converts mol object into PIL image object
     Parameter:
         mol : Chem.Mol = RDKit mol object
+        filename : str = filename for saving (default: molecule.png)
     Return:
-        PIL Image : Png = Visual image of molecule
+        str: relative path to saved image (for flask to render)
     '''
+    # Defining static folder path
+    static_folder = os.path.join(os.getcwd(), 'static')
+    img_path = os.path.join(static_folder, filename)
+
     img = Draw.MolToImage(mol)
-    img.show()
-    img.save('molecule.png', format='PNG')
-    return img
+    img.save(img_path, format='PNG')
+    return f'{filename}'
 
 def check_fg_in_mol(mol):
     '''

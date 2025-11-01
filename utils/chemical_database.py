@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from rdkit.Chem import PandasTools, Draw
-from rdkit_utils import convert_to_mol_from_smiles, check_fg_in_mol,find_mw_in_mol, visualize_mol
+from utils.rdkit_utils import convert_to_mol_from_smiles, check_fg_in_mol,find_mw_in_mol
 
 
 def csv_to_df(file_path):

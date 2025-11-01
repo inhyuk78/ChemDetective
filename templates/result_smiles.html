@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2><u> ChemDetective returned the following information about molecule: </u></h2>
+<h2><u> {{ smiles }} </u></h2>
+<br>
+{% if matched_fgs %}
+<p>Functional groups: <b>{{ matched_fgs }}</b> </p>
+{% endif %}
+<br>
+{% if MW %}
+<p>Molecular weight: <b>{{ MW }}</b> </p>
+{% endif %}
+
+{% if img_path %}
+<p> <img src="{{ url_for('static', filename=img_path) }}" alt="Molecule" width="300px" height="300px"> </p>
+{% endif %}
+
+{% endblock %}
