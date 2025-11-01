@@ -61,7 +61,6 @@ def process_smiles_df(df):
     # Add functional groups column
     df['Mol'] = df['SMILES'].apply(convert_to_mol_from_smiles)
     df['Functional Groups'] = df['Mol'].apply(check_fg_in_mol)
-    df['Molecule Image'] = df['Mol'].apply(visualize_mol)
 
     # Add new column with MW
     df['MW'] = df['Mol'].apply(find_mw_in_mol)

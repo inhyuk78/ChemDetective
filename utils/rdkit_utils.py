@@ -1,6 +1,6 @@
 from rdkit import Chem
 from rdkit.Chem import Draw
-from rdkit.Chem.Draw import IPythonConsole
+# from rdkit.Chem.Draw import IPythonConsole
 from rdkit.Chem import Descriptors
 from rdkit import DataStructs
 from PIL import Image
