@@ -1,1 +1,10 @@
-{% extends 'base.html '%}
+{% extends 'base.html' %}
+
+{% content block %}
+
+<h2>ChemDetective returned the following information:</h2>
+
+<div>{{ table|safe }}</div>
+
+
+{% endblock %}

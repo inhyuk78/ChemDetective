@@ -14,7 +14,58 @@ p {text-align: center;
 font-size: 16px;}
 div {text-align: center;}
 span {text-align: center;}
+
+#drop-area {
+    border: 2px dashed #0077cc;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    height: 200px;
+    padding: 40px;
+    text-align: center;
+    font-family: sans-serif;
+    margin: 20px auto;
+    color: #666;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+#drop-area.hover{
+    background-color: #e6f3ff;
+    border-color: #005fa3;
+}
+
+#fileElem {
+    display: none;
+}
+
+#drop-area p {
+    margin: 0;
+    cursor: pointer;
+}
+
 </style>
+
+<script>
+const dropArea = document.getElementById('drop-area');
+const fileInput = document.getElementById('fileElem');
+
+dropArea.addEventListener('click', () => fileInput.click());
+
+dropArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropArea.classList.add('hover');
+});
+
+dropArea.addEventListener('dragleave', () => dropArea.classList.remove('hover'));
+
+dropArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dropArea.classList.remove('hover');
+  fileInput.files = e.dataTransfer.files;
+  fileInput.form.submit();  // Automatically submits form
+});
+</script>
+
 
 <body>
     <nav class="navbar bg-body-tertiary">

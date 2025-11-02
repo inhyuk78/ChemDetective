@@ -18,8 +18,7 @@ def input_smiles(smiles):
             #print(f'An error occurred: {e}. Please try again.')
 
 
-def input_csv():
-    file_path = input('Insert your CSV file containing TWO (2) columns (Drug name, SMILES) here: ')
+def input_csv(file_path):
     df = csv_to_df(file_path)
     df = standardized_df(df)
     df = process_smiles_df(df)

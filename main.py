@@ -2,6 +2,7 @@ from utils.rdkit_utils import visualize_mol, check_fg_in_mol, find_mw_in_mol
 from utils.input_utils import input_smiles, input_csv
 from utils.output_utils import export_to_csv, export_to_excel
 from flask import Flask, render_template, request, url_for, redirect, session
+import os
 
 app = Flask(__name__)
 app.secret_key = 'ChemDetective2025'
@@ -9,14 +10,26 @@ app.secret_key = 'ChemDetective2025'
 @app.route('/', methods=['POST', 'GET'])
 def homepage():
     smiles = None
-    session.clear()
+    file = None
+    file_path = None
     
     if request.method == 'POST':
-        smiles = request.form['smiles']
-        session['smiles'] = smiles
-        return redirect(url_for('result_smiles'))
+        file = request.files.get('file')
+        smiles = request.form.get('smiles')
 
-    return render_template('index.html', smiles=smiles)
+        if smiles:
+            session['smiles'] = smiles
+            return redirect(url_for('result_smiles'))
+
+        elif file:
+            uploads_folder = os.path.join(os.getcwd(), 'uploads')
+            file_path = os.path.join(uploads_folder, file.filename)
+            os.makedirs(uploads_folder, exist_ok=True)
+            file.save(file_path)
+            session['file_path'] = file_path
+            return redirect(url_for('result_csv'))
+
+    return render_template('index.html', smiles=smiles, file_path=file_path)
 
 
 @app.route('/result-smiles', methods=['POST', 'GET'])
@@ -48,10 +61,17 @@ def result_smiles():
         smiles=smiles)
 
 
-@app.route('/result-csv')
+@app.route('/result-csv', methods=['GET', 'POST'])
 def result_csv():
-    return render_template('result_csv.html')
+    file_path = None
+    file_path = session.get('file_path')
 
+    if not file_path:
+        return redirect(url_for('homepage'))
+    
+    results_df = input_csv(file_path)
+    
+    return render_template('result_csv.html', table=results_df.to_html())
 
 
 
