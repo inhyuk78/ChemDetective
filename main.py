@@ -1,7 +1,7 @@
 from utils.rdkit_utils import visualize_mol, check_fg_in_mol, find_mw_in_mol
 from utils.input_utils import input_smiles, input_csv
 from utils.output_utils import export_to_csv, export_to_excel
-from flask import Flask, render_template, request, url_for, redirect, session
+from flask import Flask, render_template, request, url_for, redirect, session, flash
 import os
 
 app = Flask(__name__)
@@ -28,9 +28,7 @@ def result_smiles():
     MW = None
     img_path = None
     smiles = None
-
     smiles = session.get('smiles')
-    return_home = request.form.get('return_home')
     
     if request.method == 'POST' and request.form.get('return_home'):
         return redirect(url_for('homepage'))
@@ -60,18 +58,26 @@ def result_csv():
 
     if request.method == 'POST' and request.form.get('return_home1'):
         return redirect(url_for('homepage'))
-
+    
     if not file_path or not os.path.exists(file_path):
         return redirect(url_for('homepage'))
     
     result_df = input_csv(file_path)
+
+    if request.method == 'POST' and request.form.get('save_as_csv'):
+        export_to_csv(result_df)
+        flash('File saved successfully in your directory!', 'info')
+    
+    if request.method == 'POST' and request.form.get('save_as_excel'):
+        export_to_excel(result_df)
+        flash('File saved successfully in your directory!', 'info')
+
     return render_template('result_csv.html', table=result_df.to_html())
 
 
 @app.route('/upload', methods=['POST'])
 def upload():
     file = request.files.get('file')
-
     if not file:
         return redirect(url_for('homepage'))
     
@@ -81,6 +87,7 @@ def upload():
     file.save(file_path) # saves file into defined filepath
     session['file_path'] = file_path
     return redirect(url_for('result_csv'))
+
 
 
 if __name__ == '__main__':

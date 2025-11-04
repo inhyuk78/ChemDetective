@@ -1,14 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <p><div class="flash {{ category }}">{{ message }}</div></p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
 <h2>ChemDetective returned the following information:</h2>
 
-<p><div> {{ table|safe }} </div></p>
+<p> <div> {{ table|safe }} </div> </p>
+
+<div style="text-align: right; margin-right: 5%;">
+    <form action="#" method="POST">
+        <button type="submit" name="save_as_csv" value="1">save as csv</button>
+    </form>
+
+    <form action="#" method="POST">
+        <button type="submit" name="save_as_excel" value="1">save as excel</button>
+    </form>
+</div>
 
 <form action="#" method="POST">
     <p> <button type="submit" name="return_home1" value="1">return home</button> </p>
 </form>
 
+
+<script>
+  // Automatically fade out flash messages after 3 seconds
+  setTimeout(() => {
+    const flashes = document.querySelectorAll('.flash');
+    flashes.forEach(flash => {
+      flash.style.transition = 'opacity 0.5s ease';
+      flash.style.opacity = '0';
+      setTimeout(() => flash.remove(), 500); // Remove after fade-out
+    });
+  }, 3000);
+</script>
 
 {% endblock %}
