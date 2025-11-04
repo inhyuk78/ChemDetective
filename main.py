@@ -10,26 +10,15 @@ app.secret_key = 'ChemDetective2025'
 @app.route('/', methods=['POST', 'GET'])
 def homepage():
     smiles = None
-    file = None
-    file_path = None
     
     if request.method == 'POST':
-        file = request.files.get('file')
         smiles = request.form.get('smiles')
 
         if smiles:
             session['smiles'] = smiles
             return redirect(url_for('result_smiles'))
 
-        elif file:
-            uploads_folder = os.path.join(os.getcwd(), 'uploads') # defines file download location
-            os.makedirs(uploads_folder, exist_ok=True) # creates new if no 'uploads' folder
-            file_path = os.path.join(uploads_folder, file.filename) # 
-            file.save(file_path)
-            session['file_path'] = file_path
-            return redirect(url_for('result_csv'))
-
-    return render_template('index.html', smiles=smiles, file_path=file_path)
+    return render_template('index.html', smiles=smiles)
 
 
 @app.route('/result-smiles', methods=['POST', 'GET'])
@@ -58,7 +47,6 @@ def result_smiles():
     else:
         return redirect(url_for('homepage'))
 
-
     return render_template(
         'result_smiles.html',
         matched_fgs=matched_fgs,
@@ -69,21 +57,33 @@ def result_smiles():
 
 @app.route('/result-csv', methods=['GET', 'POST'])
 def result_csv():
-    file_path = None
     file_path = session.get('file_path')
 
-    if not file_path:
+    if not file_path or not os.path.exists(file_path):
+        return redirect(url_for('homepage'))
+
+    result_df = input_csv(file_path)
+    return render_template('result_csv.html', table=result_df.to_html())
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    file = request.files.get('file')
+
+    if not file:
         return redirect(url_for('homepage'))
     
-    results_df = input_csv(file_path)
-    
-    return render_template('result_csv.html', table=results_df.to_html())
+    uploads_folder = os.path.join(app.root_path, 'uploads') # defines file download location
+    os.makedirs(uploads_folder, exist_ok=True) # creates new if no 'uploads' folder
+    file_path = os.path.join(uploads_folder, file.filename) # defines filepath of inserted file
+    file.save(file_path) # saves file into defined filepath
 
+    session['file_path'] = file_path
+    return redirect(url_for('result_csv'))
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 

@@ -19,6 +19,7 @@ def input_smiles(smiles):
 
 
 def input_csv(file_path):
+    print('DEBUG - reading:', file_path)
     df = csv_to_df(file_path)
     df = standardized_df(df)
     df = process_smiles_df(df)

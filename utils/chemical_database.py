@@ -1,6 +1,4 @@
 import pandas as pd
-import numpy as np
-from rdkit.Chem import PandasTools, Draw
 from utils.rdkit_utils import convert_to_mol_from_smiles, check_fg_in_mol,find_mw_in_mol
 
 
@@ -13,6 +11,10 @@ def csv_to_df(file_path):
         df : pd.DataFrame = DataFrame containing CSV file data if file found
         FileNotFoundError = '{file_path} is not recognized. Please try another file.' if file not found
     ''' 
+    df = pd.read_csv(file_path)
+    return df
+    
+    """
     while True:
         try:
             df = pd.read_csv(file_path)
@@ -20,8 +22,9 @@ def csv_to_df(file_path):
         except FileNotFoundError:
              print(f'{file_path} is not recognized. Please try another file.')
              file_path = input('Enter a valid CSV file: ')
+    """
 
-def standardized_df(df, fillna_value=None): 
+def standardized_df(df): 
     '''
     Converts dataframe into standardized form for analysis
     Parameter:
@@ -29,6 +32,19 @@ def standardized_df(df, fillna_value=None):
     Return:
         df : pd.DataFrame = Standardized DataFrame
     '''
+    df.columns = [col.strip().lower() for col in df.columns]
+    
+    if len(df.columns) < 2:
+        raise ValueError('File must contain at least 2 columns: Drug Name and SMILES')
+
+    df = df.rename(columns={
+        df.columns[0]: 'Drug_Name',
+        df.columns[1]: 'SMILES'
+    })
+
+    return df
+
+    """
     while True:
         if df.shape[1] != 2: 
             print('Incorrect file format. Make sure your file has 2 columns (column 1: Drug Names, column 2: SMILES)')
@@ -48,7 +64,8 @@ def standardized_df(df, fillna_value=None):
                 df = df.fillna(fillna_values)
 
             return df
-
+        """
+            
 def process_smiles_df(df):
     '''
     Adds new columns (Molecule, functional groups, MW) containing data processed from smiles
