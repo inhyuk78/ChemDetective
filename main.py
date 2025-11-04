@@ -32,20 +32,19 @@ def result_smiles():
     smiles = session.get('smiles')
     return_home = request.form.get('return_home')
     
+    if request.method == 'POST' and request.form.get('return_home'):
+        return redirect(url_for('homepage'))
+
     if not smiles:
         return redirect(url_for('homepage'))
-    
-    if return_home:
-        return redirect(url_for('homepage'))
-
+   
     mol = input_smiles(smiles)
-
-    if mol:
-        matched_fgs = check_fg_in_mol(mol) # Functional groups present 
-        MW = find_mw_in_mol(mol) # Molecular weight
-        img_path = visualize_mol(mol) # Molecule image
-    else:
+    if not mol:
         return redirect(url_for('homepage'))
+
+    matched_fgs = check_fg_in_mol(mol) # Functional groups present 
+    MW = find_mw_in_mol(mol) # Molecular weight
+    img_path = visualize_mol(mol) # Molecule image
 
     return render_template(
         'result_smiles.html',
@@ -59,9 +58,12 @@ def result_smiles():
 def result_csv():
     file_path = session.get('file_path')
 
-    if not file_path or not os.path.exists(file_path):
+    if request.method == 'POST' and request.form.get('return_home1'):
         return redirect(url_for('homepage'))
 
+    if not file_path or not os.path.exists(file_path):
+        return redirect(url_for('homepage'))
+    
     result_df = input_csv(file_path)
     return render_template('result_csv.html', table=result_df.to_html())
 
@@ -77,7 +79,6 @@ def upload():
     os.makedirs(uploads_folder, exist_ok=True) # creates new if no 'uploads' folder
     file_path = os.path.join(uploads_folder, file.filename) # defines filepath of inserted file
     file.save(file_path) # saves file into defined filepath
-
     session['file_path'] = file_path
     return redirect(url_for('result_csv'))
 
