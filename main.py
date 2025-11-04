@@ -22,9 +22,9 @@ def homepage():
             return redirect(url_for('result_smiles'))
 
         elif file:
-            uploads_folder = os.path.join(os.getcwd(), 'uploads')
-            file_path = os.path.join(uploads_folder, file.filename)
-            os.makedirs(uploads_folder, exist_ok=True)
+            uploads_folder = os.path.join(os.getcwd(), 'uploads') # defines file download location
+            os.makedirs(uploads_folder, exist_ok=True) # creates new if no 'uploads' folder
+            file_path = os.path.join(uploads_folder, file.filename) # 
             file.save(file_path)
             session['file_path'] = file_path
             return redirect(url_for('result_csv'))
@@ -39,11 +39,16 @@ def result_smiles():
     MW = None
     img_path = None
     smiles = None
+
     smiles = session.get('smiles')
+    return_home = request.form.get('return_home')
     
-    if not 'smiles':
+    if not smiles:
         return redirect(url_for('homepage'))
     
+    if return_home:
+        return redirect(url_for('homepage'))
+
     mol = input_smiles(smiles)
 
     if mol:
@@ -52,6 +57,7 @@ def result_smiles():
         img_path = visualize_mol(mol) # Molecule image
     else:
         return redirect(url_for('homepage'))
+
 
     return render_template(
         'result_smiles.html',
