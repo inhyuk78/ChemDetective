@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 
-ChemDetective is a compact, Python-based tool for quickly analysing small organic molecules. It accepts either a single SMILES string or a CSV file of molecules, and returns identified functional groups, molecular weight, and a rendered image of the molecule.
+ChemDetective is a compact, Python-based tool for quickly analysing small organic molecules. It accepts either a single SMILES string or a CSV file of molecules, and returns identified functional groups, molecular weight, and a rendered image of the molecule. The purpose of this project was primarily to learn Python libraries: RDKit, Flask.
 
 
 ## Features
