@@ -66,7 +66,7 @@ def convert_to_mol_from_smiles(smiles):
 
 def visualize_mol(mol, filename='molecule.png'):
     '''
-    Converts mol object into PIL image object
+    Converts mol object into image in PNG file
     Parameter:
         mol : Chem.Mol = RDKit mol object
         filename : str = filename for saving (default: molecule.png)
@@ -84,7 +84,7 @@ def visualize_mol(mol, filename='molecule.png'):
 
 def check_fg_in_mol(mol):
     '''
-    Checks whether functional groups listed in functional_group_smiles_dict present in SMILES
+    Looks up functional_group_smiles_dict and conflict_rules_dict to identify FGs present
     Parameter:
         mol : Chem.Mol = RDKit mol object
     Return:
