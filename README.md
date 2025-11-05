@@ -11,8 +11,8 @@ ChemDetective is a compact, Python-based tool for quickly analysing small organi
 
   * A single molecule in **SMILES** format, or
   * A CSV file with two columns: **Molecule Name**, **SMILES**.
-* For a single SMILES input: returns identified **Functional Groups**, **Molecular Weight**, and an **Image of the Molecule**.
-* For a CSV input: returns the original table extended with two columns — **Functional Groups** and **Molecular Weight** — and allows downloading the results as CSV or Excel.
+* <ins>For a single SMILES input</ins>: returns identified **Functional Groups**, **Molecular Weight**, and an **Image of the Molecule**.
+* <ins>For a CSV input</ins>: returns the original table extended with two columns — **Functional Groups** and **Molecular Weight** — and allows downloading the results as CSV or Excel.
 
 
 ### Installation
