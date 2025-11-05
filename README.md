@@ -43,4 +43,4 @@ ChemDetective currently detects functional groups by matching RDKit **SMARTS** p
 
 ### Input CSV file:
 
-
+![input_csv](input_csv.gif)
