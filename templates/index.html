@@ -13,7 +13,7 @@
 
 
 <form action="#" method="POST">
-    <h2>Enter molecule in SMILES format:</h2>
+    <h2>Enter a molecule in SMILES format:</h2>
     <p> <input type="text" name="smiles" required/> </p>
     <p> <button type="submit" value="smiles">submit</button> </p>
 </form>
@@ -21,7 +21,7 @@
 <br>
 <br>
 
-<h2>Enter CSV file (containing TWO (2) columns):</h2>
+<h2>Upload a CSV file with exactly <u>two columns</u> (first for Drug Name, and second for SMILES Format):</h2>
 <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
     <div id="drop-area">
         <p><strong>Drag & drop your file here:</strong></p>

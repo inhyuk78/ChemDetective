@@ -8,7 +8,6 @@ def input_smiles(smiles):
         raise ValueError(f'Invalid SMILES input: {smiles}')
     return mol
 
-
 def input_csv(file_path):
     df = csv_to_df(file_path)
     df = standardized_df(df)

@@ -1,7 +1,6 @@
 import pandas as pd
 from utils.rdkit_utils import convert_to_mol_from_smiles, check_fg_in_mol,find_mw_in_mol
 
-
 def csv_to_df(file_path):
     '''
     Converts CSV file into pandas dataframe
@@ -9,11 +8,9 @@ def csv_to_df(file_path):
         file_path : CSV = File (CSV) containing drug names, smiles columns
     Return:
         df : pd.DataFrame = DataFrame containing CSV file data if file found
-        FileNotFoundError = '{file_path} is not recognized. Please try another file.' if file not found
     ''' 
     df = pd.read_csv(file_path)
     return df
-
 
 def standardized_df(df): 
     '''
@@ -34,7 +31,6 @@ def standardized_df(df):
     })
 
     return df
-
   
 def process_smiles_df(df):
     '''
@@ -44,7 +40,6 @@ def process_smiles_df(df):
     Return:
         df : pd.DataFrame = DataFrame containing new columns
     '''
-    
     # Add functional groups column
     df['Mol'] = df['SMILES'].apply(convert_to_mol_from_smiles)
     df['Functional Groups'] = df['Mol'].apply(check_fg_in_mol)
