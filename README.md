@@ -15,7 +15,7 @@ ChemDetective is a compact, Python-based tool for quickly analysing small organi
 * <ins>For a CSV input</ins>: returns the original table extended with two columns — **Functional Groups** and **Molecular Weight** — and allows downloading the results as CSV or Excel.
 
 
-### Installation
+## Installation
 
 1) Download/Clone all files in this repo.
 2) Install all python libraries listed in requirements.txt
