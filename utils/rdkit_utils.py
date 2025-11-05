@@ -5,42 +5,53 @@ import os
 
 functional_group_smiles_dict = {
     # Hydrocarbons
-    "Alkene": Chem.MolFromSmarts("C=C"),
-    "Alkyne": Chem.MolFromSmarts("C#C"),
-    "Aromatic ring": Chem.MolFromSmarts("a1aaaaa1"),
+    "alkene": Chem.MolFromSmarts("C=C"),
+    "alkyne": Chem.MolFromSmarts("C#C"),
+    "aromatic ring": Chem.MolFromSmarts("a1aaaaa1"),
 
     # Oxygen-containing groups
-    "Alcohol": Chem.MolFromSmarts("[CX4][OX2H]"),                       # R–OH (not part of carbonyl)
-    "Phenol": Chem.MolFromSmarts("c[OH]"),                              # Ar–OH
-    "Ether": Chem.MolFromSmarts("[OD2]([#6])[#6]"),                     # R–O–R'
-    "Aldehyde": Chem.MolFromSmarts("[CX3H1](=O)[#6]"),                  # R–CHO
-    "Ketone": Chem.MolFromSmarts("[CX3](=O)[#6]"),                      # R–CO–R'
-    "Carboxylic acid": Chem.MolFromSmarts("C(=O)[OX2H1]"),              # R–COOH
-    "Ester": Chem.MolFromSmarts("C(=O)O[#6]"),                          # R–COOR'
-    "Acid anhydride": Chem.MolFromSmarts("C(=O)OC(=O)"),                # (RCO)₂O
-    "Acid chloride": Chem.MolFromSmarts("C(=O)Cl"),                     # RCOCl
+    "alcohol": Chem.MolFromSmarts("[CX4][OX2H]"),                       # R–OH (not part of carbonyl)
+    "phenol": Chem.MolFromSmarts("c[OH]"),                              # Ar–OH
+    "ether": Chem.MolFromSmarts("[OD2]([#6])[#6]"),                     # R–O–R'
+    "aldehyde": Chem.MolFromSmarts("[CX3H1](=O)[#6]"),                  # R–CHO
+    "ketone": Chem.MolFromSmarts("[CX3](=O)[#6]"),                      # R–CO–R'
+    "carboxylic acid": Chem.MolFromSmarts("C(=O)[OX2H1]"),              # R–COOH
+    "ester": Chem.MolFromSmarts("C(=O)O[#6]"),                          # R–COOR'
+    "acid anhydride": Chem.MolFromSmarts("C(=O)OC(=O)"),                # (RCO)₂O
+    "acid chloride": Chem.MolFromSmarts("C(=O)Cl"),                     # RCOCl
 
     # Nitrogen-containing groups
-    "Amine (primary)": Chem.MolFromSmarts("[NX3;H2][CX4]"),             # R–NH₂
-    "Amine (secondary)": Chem.MolFromSmarts("[NX3;H1]([CX4])[CX4]"),    # R₂NH
-    "Amine (tertiary)": Chem.MolFromSmarts("[NX3]([CX4])([CX4])[CX4]"), # R₃N
-    "Amide": Chem.MolFromSmarts("C(=O)N"),                              # R–CONH₂ / R–CONR₂
-    "Nitrile": Chem.MolFromSmarts("C#N"),                               # R–C≡N
-    "Nitro": Chem.MolFromSmarts("[NX3](=O)=O"),                         # R–NO₂
+    "amine (primary)": Chem.MolFromSmarts("[NX3;H2][CX4]"),             # R–NH₂
+    "amine (secondary)": Chem.MolFromSmarts("[NX3;H1]([CX4])[CX4]"),    # R₂NH
+    "amine (tertiary)": Chem.MolFromSmarts("[NX3]([CX4])([CX4])[CX4]"), # R₃N
+    "amide": Chem.MolFromSmarts("C(=O)N"),                              # R–CONH₂ / R–CONR₂
+    "nitrile": Chem.MolFromSmarts("C#N"),                               # R–C≡N
+    "nitro": Chem.MolFromSmarts("[NX3](=O)=O"),                         # R–NO₂
 
     # Sulfur-containing groups
-    "Thiol": Chem.MolFromSmarts("[#16X2H]"),                            # R–SH
-    "Thioether": Chem.MolFromSmarts("[#16X2]([#6])[#6]"),               # R–S–R'
-    "Sulfonic acid": Chem.MolFromSmarts("S(=O)(=O)[OH]"),               # R–SO₃H
+    "thiol": Chem.MolFromSmarts("[#16X2H]"),                            # R–SH
+    "thioether": Chem.MolFromSmarts("[#16X2]([#6])[#6]"),               # R–S–R'
+    "sulfonic acid": Chem.MolFromSmarts("S(=O)(=O)[OH]"),               # R–SO₃H
 
     # Halogens
-    "Alkyl halide": Chem.MolFromSmarts("[CX4][F,Cl,Br,I]"),             # R–X
-    "Aryl halide": Chem.MolFromSmarts("c[F,Cl,Br,I]"),                  # Ar–X
+    "alkyl halide": Chem.MolFromSmarts("[CX4][F,Cl,Br,I]"),             # R–X
+    "aryl halide": Chem.MolFromSmarts("c[F,Cl,Br,I]"),                  # Ar–X
 
     # Special cases
-    "Quaternary ammonium": Chem.MolFromSmarts("[NX4+]"),                # R₄N⁺
+    "quaternary ammonium": Chem.MolFromSmarts("[NX4+]"),                # R₄N⁺
 }
 
+conflict_rules_dict = {
+    'carboxylic acid': ['alcohol', 'ketone', 'ether'],
+    'ester': ['ketone', 'ether', 'alcohol'],
+    'aldehyde': ['ketone'],
+    'aromatic ring': ['alkene'],
+    'amide': ['ketone', 'amine (primary)', 'amine (secondary)', 'amine (tertiary)'],
+    'acid chloride': ['ketone'],
+    'phenol': ['aromatic ring', 'alcohol'],
+    'ether': ['alcohol'],
+    'thioether': ['thiol']
+}
 
 def convert_to_mol_from_smiles(smiles):
     '''
@@ -64,6 +75,7 @@ def visualize_mol(mol, filename='molecule.png'):
     '''
     # Defining static folder path
     static_folder = os.path.join(os.getcwd(), 'static')
+    os.makedirs(static_folder, exist_ok=True)
     img_path = os.path.join(static_folder, filename)
 
     img = Draw.MolToImage(mol)
@@ -84,6 +96,12 @@ def check_fg_in_mol(mol):
     for name, pattern in functional_group_smiles_dict.items():     # iterates through each fg_mol, fg_name in functional_groups list
         if mol.HasSubstructMatch(pattern):             # If match, adds fg_name into empty matched_fgs list
             matched_fgs.append(name)
+
+    for dominant_group, filtered_group in conflict_rules_dict.items():
+        if dominant_group in matched_fgs:
+            for group in filtered_group:
+                if group in matched_fgs:
+                    matched_fgs.remove(group)
 
     if matched_fgs:
         return f"{', '.join(matched_fgs)}"
