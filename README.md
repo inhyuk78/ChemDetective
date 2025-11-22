@@ -23,6 +23,17 @@ ChemDetective is a compact, Python-based tool for quickly analysing small organi
 4) Open your browser and navigate to the address (eg. `http://127.0.0.1:5000`) shown in the terminal to use the ChemDetective UI.
 
 
+## Demonstration
+
+### Input organic molecule in SMILES format:
+
+![input_smiles](input_smiles.gif)
+
+### Input CSV file:
+
+![input_csv](input_csv.gif)
+
+
 ## Design notes — functional group detection
 
 ChemDetective currently detects functional groups by matching RDKit **SMARTS** patterns stored in a dictionary. The detection pipeline works like this:
@@ -34,13 +45,3 @@ ChemDetective currently detects functional groups by matching RDKit **SMARTS** p
 ### Known limitation
 
 * The present approach can produce false negatives when a `dominant` and a `filtered` functional group appear in *different parts* of the same molecule. The current `conflict_rules_dict` removes the filtered group entirely when the dominant group is present anywhere in the molecule — even if they are on distinct substructures — causing incorrect suppression of true groups.
-
-## Demonstration
-
-### Input organic molecule in SMILES format:
-
-![input_smiles](input_smiles.gif)
-
-### Input CSV file:
-
-![input_csv](input_csv.gif)
